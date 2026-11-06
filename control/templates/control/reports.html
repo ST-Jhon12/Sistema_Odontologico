@@ -1,0 +1,14 @@
+{% extends 'control/base.html' %}
+{% block title %}Reportes{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">ANÁLISIS</p><h1>Reportes clínicos</h1><p class="muted">Filtra los datos por período y prepara versiones para impresión o PDF.</p></div></div>
+<section class="report-grid">
+    {% for slug, title in report_types %}
+    <a class="report-card" href="{% url 'report_detail' slug %}">
+        <span class="report-icon">▥</span>
+        <span><strong>Reporte de {{ title|lower }}</strong><small>Filtrar por fecha, estado o paciente</small></span>
+        <span class="report-arrow">→</span>
+    </a>
+    {% endfor %}
+</section>
+{% endblock %}

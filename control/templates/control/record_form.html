@@ -1,0 +1,23 @@
+{% extends 'control/base.html' %}
+{% block title %}{% if is_edit %}Editar{% else %}Nuevo{% endif %} {{ title }}{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow"><a href="{% url 'records' slug %}">{{ title }}</a> / FORMULARIO</p><h1>{% if is_edit %}Editar registro{% else %}Nuevo registro{% endif %}</h1><p class="muted">Completa los campos para guardar la información.</p></div>
+</div>
+<section class="content-card form-card">
+    <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert error">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="form-grid">
+        {% for field in form %}
+            <div class="form-field {% if field.field.widget.input_type == 'checkbox' or field.name == 'descripcion' or field.name == 'observaciones' or field.name == 'recomendaciones' or field.name == 'indicaciones' %}field-wide{% endif %}">
+                {{ field.label_tag }}{{ field }}
+                {% if field.help_text %}<small class="help-text">{{ field.help_text|safe }}</small>{% endif %}
+                {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+        <div class="form-actions"><a class="button button-quiet" href="{% url 'records' slug %}">Cancelar</a><button class="button button-primary" type="submit">Guardar registro</button></div>
+    </form>
+</section>
+{% endblock %}

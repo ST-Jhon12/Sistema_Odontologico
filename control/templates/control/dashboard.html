@@ -1,0 +1,45 @@
+{% extends 'control/base.html' %}
+{% block title %}Panel{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow">RESUMEN DE LA CLÍNICA</p><h1>Buen día, {{ user.first_name|default:user.username }}</h1><p class="muted">Aquí tienes la actividad de Sonrisa Perfecta.</p></div>
+    <a class="button button-primary" href="{% url 'record_create' 'citas' %}">＋ Nueva cita</a>
+</div>
+<section class="stats-grid" aria-label="Indicadores">
+    <article class="stat-card"><span class="stat-icon teal">◉</span><span class="stat-label">Pacientes registrados</span><strong>{{ patient_count }}</strong><a href="{% url 'records' 'pacientes' %}">Ver pacientes →</a></article>
+    <article class="stat-card"><span class="stat-icon blue">▣</span><span class="stat-label">Citas registradas</span><strong>{{ appointment_count }}</strong><a href="{% url 'records' 'citas' %}">Ver citas →</a></article>
+    <article class="stat-card"><span class="stat-icon violet">▤</span><span class="stat-label">Diagnósticos</span><strong>{{ diagnosis_count }}</strong><a href="{% url 'records' 'diagnosticos' %}">Ver diagnósticos →</a></article>
+    <article class="stat-card"><span class="stat-icon orange">✧</span><span class="stat-label">Tratamientos</span><strong>{{ treatment_count }}</strong><a href="{% url 'records' 'tratamientos' %}">Ver tratamientos →</a></article>
+</section>
+<section class="content-card">
+    <div class="section-heading">
+        <div><h2>Citas de hoy</h2><p class="muted">{{ upcoming_count }} citas pendientes o confirmadas próximas</p></div>
+        <a class="text-link" href="{% url 'records' 'citas' %}">Todas las citas →</a>
+    </div>
+    {% if today_appointments %}
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Hora</th><th>Paciente</th><th>Odontólogo</th><th>Motivo</th><th>Estado</th></tr></thead>
+                <tbody>
+                    {% for appointment in today_appointments %}
+                    <tr>
+                        <td>{{ appointment.hora|time:"H:i" }}</td>
+                        <td><strong>{{ appointment.paciente }}</strong></td>
+                        <td>{{ appointment.odontologo }}</td>
+                        <td>{{ appointment.motivo }}</td>
+                        <td><span class="status-chip">{{ appointment.get_estado_display }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state"><span>▣</span><strong>No hay citas para hoy</strong><p>Cuando registres una cita, aparecerá aquí.</p><a class="button button-secondary" href="{% url 'record_create' 'citas' %}">Agendar cita</a></div>
+    {% endif %}
+</section>
+<section class="quick-links">
+    <a class="quick-card" href="{% url 'record_create' 'pacientes' %}"><span>＋</span><strong>Registrar paciente</strong><small>Añade un paciente al sistema</small></a>
+    <a class="quick-card" href="{% url 'record_create' 'diagnosticos' %}"><span>▤</span><strong>Nuevo diagnóstico</strong><small>Documenta una consulta clínica</small></a>
+    <a class="quick-card" href="{% url 'reports' %}"><span>▥</span><strong>Ver reportes</strong><small>Consulta e imprime información</small></a>
+</section>
+{% endblock %}

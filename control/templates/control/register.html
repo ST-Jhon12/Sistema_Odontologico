@@ -1,0 +1,25 @@
+{% extends 'control/base.html' %}
+{% block title %}Crear cuenta{% endblock %}
+{% block auth_content %}
+<section class="auth-card">
+    <a class="brand auth-brand" href="{% url 'login' %}">
+        <span class="brand-mark">S</span>
+        <span>Sonrisa <strong>Perfecta</strong><small>Consultorio odontológico</small></span>
+    </a>
+    <h1>Crear cuenta</h1>
+    <p class="muted">Registra tu acceso al sistema del consultorio.</p>
+    <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert error">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+            <div class="form-field">
+                {{ field.label_tag }}{{ field }}
+                {% if field.help_text %}<small class="help-text">{{ field.help_text|safe }}</small>{% endif %}
+                {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+            </div>
+        {% endfor %}
+        <button class="button button-primary button-wide" type="submit">Crear cuenta</button>
+    </form>
+    <p class="auth-switch">¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+</section>
+{% endblock %}

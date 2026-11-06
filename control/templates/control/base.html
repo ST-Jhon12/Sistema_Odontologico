@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#087e83">
+    <title>{% block title %}Sonrisa Perfecta{% endblock %} | Sonrisa Perfecta</title>
+    <link rel="stylesheet" href="{% static 'control/css/app.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% if user.is_authenticated %}
+<header class="topbar no-print">
+    <a class="brand" href="{% url 'dashboard' %}">
+        <span class="brand-mark">S</span>
+        <span>Sonrisa <strong>Perfecta</strong><small>Consultorio odontológico</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Abrir navegación" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a href="{% url 'dashboard' %}">Panel</a>
+        <a href="{% url 'records' 'pacientes' %}">Pacientes</a>
+        <a href="{% url 'records' 'citas' %}">Citas</a>
+        <a href="{% url 'records' 'odontologos' %}">Equipo</a>
+        <a href="{% url 'reports' %}">Reportes</a>
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="nav-logout">Salir</button>
+        </form>
+    </nav>
+</header>
+<div class="app-shell">
+    <aside class="sidebar no-print" id="sidebar">
+        <div class="sidebar-label">GESTIÓN CLÍNICA</div>
+        <a class="side-link" href="{% url 'dashboard' %}"><span>⌂</span> Panel</a>
+        <a class="side-link" href="{% url 'records' 'pacientes' %}"><span>◉</span> Pacientes</a>
+        <a class="side-link" href="{% url 'records' 'citas' %}"><span>▣</span> Citas</a>
+        <a class="side-link" href="{% url 'records' 'odontologos' %}"><span>✚</span> Odontólogos</a>
+        <a class="side-link" href="{% url 'records' 'especialidades' %}"><span>◇</span> Especialidades</a>
+        <a class="side-link" href="{% url 'records' 'diagnosticos' %}"><span>▤</span> Diagnósticos</a>
+        <a class="side-link" href="{% url 'records' 'tratamientos' %}"><span>✧</span> Tratamientos</a>
+        <a class="side-link" href="{% url 'records' 'recetas' %}"><span>▧</span> Recetas</a>
+        <div class="sidebar-label sidebar-label-spaced">ANÁLISIS</div>
+        <a class="side-link" href="{% url 'reports' %}"><span>▥</span> Reportes</a>
+        <form method="post" action="{% url 'logout' %}" class="sidebar-logout">
+            {% csrf_token %}
+            <button type="submit" class="side-link"><span>↪</span> Cerrar sesión</button>
+        </form>
+        <div class="sidebar-user">
+            <span class="avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+            <span>{{ user.get_full_name|default:user.username }}<small>Personal del consultorio</small></span>
+        </div>
+    </aside>
+    <main class="main-content">
+        {% if messages %}
+            <div class="messages no-print" aria-live="polite">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</div>
+{% else %}
+<main class="auth-page">
+    {% if messages %}
+        <div class="messages auth-messages" aria-live="polite">
+            {% for message in messages %}<div class="alert {{ message.tags }}">{{ message }}</div>{% endfor %}
+        </div>
+    {% endif %}
+    {% block auth_content %}{% endblock %}
+</main>
+{% endif %}
+<script>
+    const menuButton = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (menuButton && sidebar) {
+        menuButton.addEventListener('click', () => {
+            const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+            menuButton.setAttribute('aria-expanded', String(!expanded));
+            sidebar.classList.toggle('sidebar-open', !expanded);
+        });
+    }
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

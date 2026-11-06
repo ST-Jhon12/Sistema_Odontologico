@@ -1,0 +1,15 @@
+{% extends 'control/base.html' %}
+{% block title %}Eliminar registro{% endblock %}
+{% block content %}
+<section class="content-card confirm-card">
+    <span class="confirm-icon">!</span>
+    <p class="eyebrow">CONFIRMAR ACCIÓN</p>
+    <h1>¿Eliminar este registro?</h1>
+    <p class="muted">Vas a eliminar <strong>{{ object }}</strong>. Esta acción no se puede deshacer. Los registros relacionados están protegidos.</p>
+    <form method="post" class="form-actions">
+        {% csrf_token %}
+        <a class="button button-quiet" href="{% url 'records' slug %}">Cancelar</a>
+        <button class="button button-danger" type="submit">Sí, eliminar</button>
+    </form>
+</section>
+{% endblock %}
